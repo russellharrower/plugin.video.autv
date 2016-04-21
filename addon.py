@@ -19,15 +19,15 @@ _handle = int(sys.argv[1])
 # In a "real life" plugin you will need to get info and links to video files/streams
 # from some web-site or online service.
 VIDEOS = {'Melbourne': [{'name': '7 Melbourne',
-                       'thumb': './resources/media/plugin.program.advancedsettings-0.8.8.png',
+                       'thumb': '/resources/media/plugin.program.advancedsettings-0.8.8.png',
                        'video': 'https://sevenwestmedia01-i.akamaihd.net/hls/live/224813/MEL1/master_high.m3u8',
                        'genre': 'Seven Network'},
                       {'name': '7mate',
-                       'thumb': './resources/media/440px-7mate_(logo).svg.png',
+                       'thumb': '/resources/media/440px-7mate_(logo).svg.png',
                        'video': 'https://sevenwestmedia01-i.akamaihd.net/hls/live/224839/MEL3/master_high.m3u8',
                         'genre': 'Seven Network'},
                       {'name': '7Flix',
-                       'thumb': './resources/media/440px-7flix_logo_without_background.png',
+                       'thumb': '/resources/media/440px-7flix_logo_without_background.png',
                        'video': 'https://sevenwestmedia01-i.akamaihd.net/hls/live/224856/MEL6/master.m3u8',
                        'genre': 'Seven Network'}
                       ],
