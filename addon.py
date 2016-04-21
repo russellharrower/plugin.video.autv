@@ -1,161 +1,207 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-#
-#     Copyright (C) 2012 Tristan Fischer (sphere@dersphere.de)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
+# Module: default
+# Author: Roman V. M.
+# Created on: 28.11.2014
+# License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
-from xbmcswift2 import Plugin
+import sys
+from urlparse import parse_qsl
+import xbmcgui
+import xbmcplugin
 
+# Get the plugin url in plugin:// notation.
+_url = sys.argv[0]
+# Get the plugin handle as an integer number.
+_handle = int(sys.argv[1])
 
-STRINGS = {
-    'page': 30001,
-    'sydney': 30600,
-    'streams': 30100,
-    'videos': 30101,
-    'vodcasts': 30103,
-    'search': 30200,
-    'title': 30201
-}
-
-STATIC_STREAMS = (
-    {
-        'title': 'Nasa TV HD',
-        'logo': 'public.jpg',
-        'stream_url': ('http://nasatv-lh.akamaihd.net/i/'
-                       'NASA_101@319270/master.m3u8'),
-    }, {
-        'title': 'ISS Live Stream',
-        'logo': 'iss.jpg',
-        'stream_url': ('http://iphone-streaming.ustream.tv/ustreamVideo/'
-                       '9408562/streams/live/playlist.m3u8'),
-    }, {
-        'title': 'Educational Channel HD',
-        'logo': 'edu.jpg',
-        'stream_url': ('http://nasatv-lh.akamaihd.net/i/'
-                       'NASA_102@319272/master.m3u8'),
-    }, {
-        'title': 'Media Channel HD',
-        'logo': 'media.jpg',
-        'stream_url': ('http://nasatv-lh.akamaihd.net/i/'
-                       'NASA_103@319271/master.m3u8'),
-    },{
-        'title': 'ISS HD Earth Viewing - ustream',
-        'logo': 'isshd.jpg',
-        'stream_url': ('http://iphone-streaming.ustream.tv/uhls/'
-                       '17074538/streams/live/iphone/playlist.m3u8'),
-    },{
-        'title': 'ISS HD Earth Viewing - urthecast HD',
-        'logo': 'isshd.jpg',
-        'stream_url': ('http://d2ai41bknpka2u.cloudfront.net/live/'
-                       'iss.stream_source/playlist.m3u8'),
-    },
-)
-
-SYDNEY_STREAMS = (
-                  {
-                  'title': 'Channel 7',
-                  'logo': 'public.jpg',
-                  'stream_url': ('https://sevenwestmedia01-i.akamaihd.net/hls/live/224814/SYD1/master_high.m3u8'),
-                  }, {
-                  'title': 'Channel 9',
-                  'logo': 'iss.jpg',
-                  'stream_url': ('https://9nowlivehls-i.akamaihd.net/hls/live/226554/ch9sydprd/master.m3u8'),
-                  },
-)
-
-YOUTUBE_CHANNELS = (
-    {
-        'name': 'NASA Main',
-        'logo': 'nasa.jpg',
-        'channel_id': 'UCLA_DiR1FfKNvjuUpBHmylQ',
-        'user': 'NASAtelevision',
-    }, {
-        'name': 'NASA Goddard',
-        'logo': 'goddard.jpg',
-        'channel_id': 'UCAY-SMFNfynqz1bdoaV8BeQ',
-        'user': 'NASAexplorer',
-    }, {
-        'name': 'NASA Jet Propulsion Laboratory',
-        'logo': 'jpl.jpg',
-        'channel_id': 'UCryGec9PdUCLjpJW2mgCuLw',
-        'user': 'JPLnews',
-    }, {
-        'name': 'NASA Kennedy Space Center',
-        'logo': 'nasa.jpg',
-        'channel_id': 'UCjJtr2fFcUp6yljzJOzpHUg',
-        'user': 'NASAKennedy',
-    }, {
-        'name': 'Hubble Space Telescope',
-        'logo': 'hubble.jpg',
-        'channel_id': 'UCqvjEkH_41m4DYaoNQwk4Bw',
-        'user': 'HubbleSiteChannel',
-    },
-)
-
-YOUTUBE_URL ='plugin://plugin.video.youtube/channel/%s/?page=1'
-
-plugin = Plugin()
+# Free sample videos are provided by www.vidsplay.com
+# Here we use a fixed set of properties simply for demonstrating purposes
+# In a "real life" plugin you will need to get info and links to video files/streams
+# from some web-site or online service.
+VIDEOS = {'Melbourne': [{'name': '7 Melbourne',
+                       'thumb': 'resources/media/plugin.program.advancedsettings-0.8.8.png',
+                       'video': 'https://sevenwestmedia01-i.akamaihd.net/hls/live/224813/MEL1/master_high.m3u8',
+                       'genre': 'Seven Network'},
+                      {'name': '7mate',
+                       'thumb': 'resources/media/440px-7mate_(logo).svg.png',
+                       'video': 'https://sevenwestmedia01-i.akamaihd.net/hls/live/224839/MEL3/master_high.m3u8',
+                        'genre': 'Seven Network'},
+                      {'name': '7Flix',
+                       'thumb': 'resources/media/440px-7flix_logo_without_background.png',
+                       'video': 'https://sevenwestmedia01-i.akamaihd.net/hls/live/224856/MEL6/master.m3u8',
+                       'genre': 'Seven Network'}
+                      ],
+            'Cars': [{'name': 'Postal Truck',
+                      'thumb': 'http://www.vidsplay.com/vids/us_postal.jpg',
+                      'video': 'http://www.vidsplay.com/vids/us_postal.mp4',
+                      'genre': 'Cars'},
+                     {'name': 'Traffic',
+                      'thumb': 'http://www.vidsplay.com/vids/traffic1.jpg',
+                      'video': 'http://www.vidsplay.com/vids/traffic1.avi',
+                      'genre': 'Cars'},
+                     {'name': 'Traffic Arrows',
+                      'thumb': 'http://www.vidsplay.com/vids/traffic_arrows.jpg',
+                      'video': 'http://www.vidsplay.com/vids/traffic_arrows.mp4',
+                      'genre': 'Cars'}
+                     ],
+            'Food': [{'name': 'Chicken',
+                      'thumb': 'http://www.vidsplay.com/vids/chicken.jpg',
+                      'video': 'http://www.vidsplay.com/vids/bbqchicken.mp4',
+                      'genre': 'Food'},
+                     {'name': 'Hamburger',
+                      'thumb': 'http://www.vidsplay.com/vids/hamburger.jpg',
+                      'video': 'http://www.vidsplay.com/vids/hamburger.mp4',
+                      'genre': 'Food'},
+                     {'name': 'Pizza',
+                      'thumb': 'http://www.vidsplay.com/vids/pizza.jpg',
+                      'video': 'http://www.vidsplay.com/vids/pizza.mp4',
+                      'genre': 'Food'}
+                     ]}
 
 
-@plugin.route('/')
-def show_root_menu():
-    items = [
-        {'label': _('Sydney Streams'),
-         'path': plugin.url_for('sydney_streams')},
-        {'label': _('videos'),
-         'path': plugin.url_for('show_channels')},
-    ]
-    return plugin.finish(items)
+def get_categories():
+    """
+    Get the list of video categories.
+    Here you can insert some parsing code that retrieves
+    the list of video categories (e.g. 'Movies', 'TV-shows', 'Documentaries' etc.)
+    from some site or server.
+
+    :return: list
+    """
+    return VIDEOS.keys()
 
 
-@plugin.route('/sydney/')
-def syndey_streams():
-    items = [{
-        'label': stream['title'],
-        'thumbnail': get_logo(stream['logo']),
-        'path': stream['stream_url'],
-        'is_playable': True,
-    } for stream in SYDNEY_STREAMS]
-    return plugin.finish(items)
+def get_videos(category):
+    """
+    Get the list of videofiles/streams.
+    Here you can insert some parsing code that retrieves
+    the list of videostreams in a given category from some site or server.
+
+    :param category: str
+    :return: list
+    """
+    return VIDEOS[category]
 
 
-@plugin.route('/channels/')
-def show_channels():
-    items = [{
-        'label': channel['name'],
-        'thumbnail': get_logo(channel['logo']),
-        'path': YOUTUBE_URL % channel['channel_id'],
-    } for channel in YOUTUBE_CHANNELS]
-    return plugin.finish(items)
+def list_categories():
+    """
+    Create the list of video categories in the Kodi interface.
+    """
+    # Get video categories
+    categories = get_categories()
+    # Create a list for our items.
+    listing = []
+    # Iterate through categories
+    for category in categories:
+        # Create a list item with a text label and a thumbnail image.
+        list_item = xbmcgui.ListItem(label=category)
+        # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
+        # Here we use the same image for all items for simplicity's sake.
+        # In a real-life plugin you need to set each image accordingly.
+        list_item.setArt({'thumb': VIDEOS[category][0]['thumb'],
+                          'icon': VIDEOS[category][0]['thumb'],
+                          'fanart': VIDEOS[category][0]['thumb']})
+        # Set additional info for the list item.
+        # Here we use a category name for both properties for for simplicity's sake.
+        # setInfo allows to set various information for an item.
+        # For available properties see the following link:
+        # http://mirrors.xbmc.org/docs/python-docs/15.x-isengard/xbmcgui.html#ListItem-setInfo
+        list_item.setInfo('video', {'title': category, 'genre': category})
+        # Create a URL for the plugin recursive callback.
+        # Example: plugin://plugin.video.example/?action=listing&category=Animals
+        url = '{0}?action=listing&category={1}'.format(_url, category)
+        # is_folder = True means that this item opens a sub-list of lower level items.
+        is_folder = True
+        # Add our item to the listing as a 3-element tuple.
+        listing.append((url, list_item, is_folder))
+    # Add our listing to Kodi.
+    # Large lists and/or slower systems benefit from adding all items at once via addDirectoryItems
+    # instead of adding one by ove via addDirectoryItem.
+    xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
+    # Add a sort method for the virtual folder items (alphabetically, ignore articles)
+    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+    # Finish creating a virtual folder.
+    xbmcplugin.endOfDirectory(_handle)
 
-def get_logo(logo):
-    addon_id = plugin._addon.getAddonInfo('id')
-    return 'special://home/addons/%s/resources/media/%s' % (addon_id, logo)
+
+def list_videos(category):
+    """
+    Create the list of playable videos in the Kodi interface.
+
+    :param category: str
+    """
+    # Get the list of videos in the category.
+    videos = get_videos(category)
+    # Create a list for our items.
+    listing = []
+    # Iterate through videos.
+    for video in videos:
+        # Create a list item with a text label and a thumbnail image.
+        list_item = xbmcgui.ListItem(label=video['name'])
+        # Set additional info for the list item.
+        list_item.setInfo('video', {'title': video['name'], 'genre': video['genre']})
+        # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
+        # Here we use the same image for all items for simplicity's sake.
+        # In a real-life plugin you need to set each image accordingly.
+        list_item.setArt({'thumb': video['thumb'], 'icon': video['thumb'], 'fanart': video['thumb']})
+        # Set 'IsPlayable' property to 'true'.
+        # This is mandatory for playable items!
+        list_item.setProperty('IsPlayable', 'true')
+        # Create a URL for the plugin recursive callback.
+        # Example: plugin://plugin.video.example/?action=play&video=http://www.vidsplay.com/vids/crab.mp4
+        url = '{0}?action=play&video={1}'.format(_url, video['video'])
+        # Add the list item to a virtual Kodi folder.
+        # is_folder = False means that this item won't open any sub-list.
+        is_folder = False
+        # Add our item to the listing as a 3-element tuple.
+        listing.append((url, list_item, is_folder))
+    # Add our listing to Kodi.
+    # Large lists and/or slower systems benefit from adding all items at once via addDirectoryItems
+    # instead of adding one by ove via addDirectoryItem.
+    xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
+    # Add a sort method for the virtual folder items (alphabetically, ignore articles)
+    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+    # Finish creating a virtual folder.
+    xbmcplugin.endOfDirectory(_handle)
 
 
-def _(string_id):
-    if string_id in STRINGS:
-        return plugin.get_string(STRINGS[string_id])
+def play_video(path):
+    """
+    Play a video by the provided path.
+
+    :param path: str
+    """
+    # Create a playable item with a path to play.
+    play_item = xbmcgui.ListItem(path=path)
+    # Pass the item to the Kodi player.
+    xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
+
+
+def router(paramstring):
+    """
+    Router function that calls other functions
+    depending on the provided paramstring
+
+    :param paramstring:
+    """
+    # Parse a URL-encoded paramstring to the dictionary of
+    # {<parameter>: <value>} elements
+    params = dict(parse_qsl(paramstring))
+    # Check the parameters passed to the plugin
+    if params:
+        if params['action'] == 'listing':
+            # Display the list of videos in a provided category.
+            list_videos(params['category'])
+        elif params['action'] == 'play':
+            # Play a video from a provided URL.
+            play_video(params['video'])
     else:
-        plugin.log.warning('String is missing: %s' % string_id)
-        return string_id
+        # If the plugin is called from Kodi UI without any parameters,
+        # display the list of video categories
+        list_categories()
 
-
-def log(text):
-    plugin.log.info(text)
 
 if __name__ == '__main__':
-    plugin.run()
+    # Call the router function and pass the plugin call parameters to it.
+    # We use string slicing to trim the leading '?' from the plugin call paramstring
+    router(sys.argv[2][1:])
