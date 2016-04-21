@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.autv" name="AUTV" version="0.0.2" provider-name="Russell Harrower">
+<addon id="plugin.video.autv" name="AUTV" version="0.0.1a" provider-name="Russell Harrower">
   <requires>
        <import addon="xbmc.python" version="2.20.0"/>
   </requires>
